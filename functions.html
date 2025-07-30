@@ -4,9 +4,10 @@
   <meta charset="utf-8"/>
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
   <script>
-    function insertSignature(event) {
+    // Funzione evento: aggiorna la firma quando cambia il mittente
+    function onMessageFromChanged(event) {
       const userEmail = Office.context.mailbox.userProfile.emailAddress;
-      const secureKey = "NWjEEPifJw9p^e!nvqN*QHOe2YrDipcpHH!Kzxvv9I*npRBgMJ0wzNmQ^FlSo45Q";
+      const secureKey = "NWjEEPifJw9p^e!nvqN*QHOe2YrDipcpHH!Kzxvv9I*npRBgMJ0wzNmQ^FlSo45Q"; // <-- Inserisci qui la tua chiave reale se vuoi
       const signatureUrl = `https://www.group-ecs.com/ExchangeSignature/get_signature.php?email=${encodeURIComponent(userEmail)}&key=${secureKey}`;
       fetch(signatureUrl)
         .then(res => res.text())
@@ -16,6 +17,11 @@
           });
         });
     }
+    // Pulsante manuale
+    function insertSignature(event) {
+      onMessageFromChanged(event);
+    }
+    Office.actions.associate("onMessageFromChanged", onMessageFromChanged);
     Office.actions.associate("insertSignature", insertSignature);
   </script>
 </head>
