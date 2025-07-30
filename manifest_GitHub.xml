@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0"
+           xsi:type="MailApp">
+
+  <Id>8e79c457-926d-43e0-b1b2-7f06cae57c8a</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Group ECS</ProviderName>
+  <DefaultLocale>it-IT</DefaultLocale>
+  <DisplayName DefaultValue="Firma Aziendale Group-ECS" />
+  <Description DefaultValue="Inserisce automaticamente la firma aziendale nelle email in Outlook." />
+  <IconUrl DefaultValue="https://edifabio-72.github.io/firma-outlook/icon-32.png" />
+  <SupportUrl DefaultValue="https://www.group-ecs.com" />
+
+  <AppDomains>
+    <AppDomain>https://edifabio-72.github.io</AppDomain>
+    <AppDomain>https://www.group-ecs.com</AppDomain>
+  </AppDomains>
+
+  <Hosts>
+    <Host Name="Mailbox" />
+  </Hosts>
+
+  <Requirements>
+    <Sets DefaultMinVersion="1.8">
+      <Set Name="Mailbox"/>
+    </Sets>
+  </Requirements>
+
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://edifabio-72.github.io/firma-outlook/edit.html" />
+  </DefaultSettings>
+
+  <Permissions>ReadWriteItem</Permissions>
+
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit"/>
+  </Rule>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" V="1.0">
+    <Hosts>
+      <Host xsi:type="MailHost">
+        <DesktopFormFactor>
+          <FunctionFile resid="functionFile"/>
+          <ExtensionPoint xsi:type="MessageCompose">
+            <!-- Evento OnMessageFromChanged -->
+            <Event Type="OnMessageFromChanged" FunctionName="onMessageFromChanged"/>
+          </ExtensionPoint>
+          <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="msgComposeGroup">
+                <Label resid="groupLabel"/>
+                <Control xsi:type="Button" id="insertSignatureButton">
+                  <Label resid="buttonLabel"/>
+                  <Supertip>
+                    <Title resid="buttonLabel"/>
+                    <Description resid="buttonDescription"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="icon16"/>
+                    <bt:Image size="32" resid="icon32"/>
+                    <bt:Image size="80" resid="icon80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>insertSignature</FunctionName>
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="icon16" DefaultValue="https://edifabio-72.github.io/firma-outlook/icon-32.png"/>
+        <bt:Image id="icon32" DefaultValue="https://edifabio-72.github.io/firma-outlook/icon-32.png"/>
+        <bt:Image id="icon80" DefaultValue="https://edifabio-72.github.io/firma-outlook/icon-32.png"/>
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="functionFile" DefaultValue="https://edifabio-72.github.io/firma-outlook/functions.html"/>
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="groupLabel" DefaultValue="Firma Aziendale"/>
+        <bt:String id="buttonLabel" DefaultValue="Inserisci Firma"/>
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="buttonDescription" DefaultValue="Inserisce la firma aziendale approvata nel corpo dell'email."/>
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>
