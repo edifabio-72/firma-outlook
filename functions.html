@@ -4,10 +4,14 @@
   <meta charset="utf-8"/>
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
   <script>
-    // Funzione evento: aggiorna la firma quando cambia il mittente
-    function onMessageFromChanged(event) {
+    Office.onReady(() => {
+      // Associa la funzione all'azione dell'add-in
+      Office.actions.associate("insertSignature", insertSignature);
+    });
+
+    function insertSignature(event) {
       const userEmail = Office.context.mailbox.userProfile.emailAddress;
-      const secureKey = "NWjEEPifJw9p^e!nvqN*QHOe2YrDipcpHH!Kzxvv9I*npRBgMJ0wzNmQ^FlSo45Q"; // <-- Inserisci qui la tua chiave reale se vuoi
+      const secureKey = "NWjEEPifJw9p^e!nvqN*QHOe2YrDipcpHH!Kzxvv9I*npRBgMJ0wzNmQ^FlSo45Q"; // <-- METTI LA TUA KEY QUI!
       const signatureUrl = `https://www.group-ecs.com/ExchangeSignature/get_signature.php?email=${encodeURIComponent(userEmail)}&key=${secureKey}`;
       fetch(signatureUrl)
         .then(res => res.text())
@@ -15,14 +19,14 @@
           Office.context.mailbox.item.body.setSelectedDataAsync(signature, { coercionType: Office.CoercionType.Html }, () => {
             event.completed();
           });
+        })
+        .catch(error => {
+          // Mostra errore all’utente in modo semplice
+          Office.context.mailbox.item.body.setSelectedDataAsync("Errore caricamento firma: " + error, { coercionType: Office.CoercionType.Text }, () => {
+            event.completed();
+          });
         });
     }
-    // Pulsante manuale
-    function insertSignature(event) {
-      onMessageFromChanged(event);
-    }
-    Office.actions.associate("onMessageFromChanged", onMessageFromChanged);
-    Office.actions.associate("insertSignature", insertSignature);
   </script>
 </head>
 <body></body>
